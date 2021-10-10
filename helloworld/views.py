@@ -1,10 +1,8 @@
+import os.path
+
 from django.shortcuts import render
 
 
 def index(request):
-    """Placeholder index view"""
-    return render(request, )
+    return render(request,'index/index.html')
 
-
-def teste(request):
-    return render(request,'teste.html')
