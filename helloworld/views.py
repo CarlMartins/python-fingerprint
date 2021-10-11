@@ -9,6 +9,9 @@ def index(request):
 
 def login(request):
     query = request.GET.get('teste')
+    context = {
+        'teste':query
+    }
     return render(request,'login.html')
 
 def start(request):

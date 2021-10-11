@@ -23,5 +23,5 @@ urlpatterns = [
     path('index/', views.index),
     path('login/', views.login),
     path('', views.start),
-    path('logar/',controller.logar)
+    path('logar/',controller.logar,name='logar')
 ]

@@ -1,11 +1,23 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
     <title>Title</title>
 </head>
-<body>
 
+<body>
+<h1>testeeeeeee</h1>
+<p>{% static 'css/style.css' %}</p>
+    <form method="post" action="{%url 'logar'%}">
+        {% csrf_token %}
+        <h2>Login</h2>
+        <input type="text" name="user">
+        <h2>Senha</h2>
+        <input type="password" name="pass">
+        <button>Logar</button>
+    </form>
 </body>
 </html>
 
