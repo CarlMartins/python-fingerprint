@@ -2,7 +2,7 @@
 <project version="4">
   <component name="DBNavigator.Project.DataEditorManager">
     <record-view-column-sorting-type value="BY_INDEX" />
-    <value-preview-text-wrapping value="true" />
+    <value-preview-text-wrapping value="false" />
     <value-preview-pinned value="false" />
   </component>
   <component name="DBNavigator.Project.DataExportManager">
@@ -32,7 +32,14 @@
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="4ac4643b-fb75-4638-8e25-ca1a68e4f4ea">
-      <console name="SQLite" type="STANDARD" schema="main" session="Main"><![CDATA[select * from auth_user_user_permissions]]></console>
+      <console name="SQLite" type="STANDARD" schema="main" session="Main"><![CDATA[create table TB_Cadastro(
+    ID_Cadastro integer primary key autoincrement,
+    Img_Biometria blob,
+    Nm_Cadastro varchar(50),
+    Nv_Cadastro integer    
+);
+
+select * from tb_cadastro]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
