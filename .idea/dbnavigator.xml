@@ -39,7 +39,6 @@
     Nv_Cadastro integer    
 );
 
-drop table TB_Cadastro
 
 
 select * from TB_Cadastro]]></console>
