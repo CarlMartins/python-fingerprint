@@ -17,20 +17,23 @@ def logar(request):
         cursor.execute(querySelect)
         resultados = cursor.fetchall()
 
-        for linha in resultados:
-            idCadastro = linha[0]
-            digitalBanco = linha[1]
-            nmCadastro = linha[2]
-            nvCadastro = linha[3]
+        if comparaDigitais(digitalLogin, resultados) == True:
+            return None
 
-            if comparaDigitais(digitalLogin,digitalBanco) == True:
-                return "foi"
 
-    except Exception as e:
-        print("deu ruim")
+    except sqlite3.Error as e:
+        print(e)
 
     return None
 
 
-def comparaDigitais(imgDigital):
+def comparaDigitais(digitalLogin,resultados):
+    for linha in resultados:
+        idCadastro = linha[0]
+        digitalBanco = linha[1]
+        nmCadastro = linha[2]
+        nvCadastro = linha[3]
+
+        #Algorítmo de comparação
+
     return None
