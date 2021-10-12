@@ -1,5 +1,6 @@
 import sqlite3
 import cv2
+import numpy as np
 
 def salvarArquivo(dados,caminho):
     with open(caminho,'wb') as file:
@@ -20,6 +21,16 @@ def lerBlob(idCadastro):
             nome = linha[2]
             imagem = linha[1]
 
+            # use numpy to construct an array from the bytes
+            x = np.frombuffer(imagem, dtype='uint8')
+
+            # decode the array into an image
+            img = cv2.imdecode(x, cv2.IMREAD_UNCHANGED)
+
+            # show it
+            cv2.imshow("Image Window", img)
+            cv2.waitKey(0)
+
 
 
             caminho = "C:\\Users\\yuryr\\Desktop\\" + nome + ".tif"
@@ -36,4 +47,4 @@ def lerBlob(idCadastro):
         if conexaoSQLite:
             conexaoSQLite.close()
 
-lerBlob(1)
+lerBlob(3)
