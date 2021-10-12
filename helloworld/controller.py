@@ -6,9 +6,11 @@ import numpy as np
 @csrf_exempt
 def logar(request):
     digitalLogin = request.POST.get('imgDigital')
-    x = np.frombuffer((request.FILES.get('imgDigital').file), np.uint8)
+    x = np.asarray(bytearray(request.FILES.get('imgDigital').read()), dtype=np.uint8)
     imagem = cv2.imdecode(x, cv2.IMREAD_UNCHANGED)
-    cv2.imshow(imagem)
+    cv2.imshow('Digital', imagem)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
     try:
         # Conectar ao banco
