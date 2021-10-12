@@ -26,7 +26,7 @@
     <show-object-properties value="true" />
     <loaded-nodes>
       <connection connection-id="4ac4643b-fb75-4638-8e25-ca1a68e4f4ea">
-        <schema name="main" object-types="table, view" />
+        <schema name="main" object-types="table, view, column" />
       </connection>
     </loaded-nodes>
   </component>
@@ -39,7 +39,10 @@
     Nv_Cadastro integer    
 );
 
-select * from tb_cadastro]]></console>
+drop table TB_Cadastro
+
+
+select * from TB_Cadastro]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
@@ -98,7 +101,7 @@ select * from tb_cadastro]]></console>
           <deprecated-pwd value="" />
         </database>
         <properties>
-          <auto-commit value="false" />
+          <auto-commit value="true" />
         </properties>
         <ssh-settings>
           <active value="false" />
@@ -124,7 +127,7 @@ select * from tb_cadastro]]></console>
           <connect-automatically value="true" />
           <restore-workspace value="true" />
           <restore-workspace-deep value="true" />
-          <environment-type value="default" />
+          <environment-type value="development" />
           <connectivity-timeout value="5" />
           <idle-time-to-disconnect value="30" />
           <idle-time-to-disconnect-pool value="5" />
