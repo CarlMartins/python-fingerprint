@@ -3,19 +3,6 @@ import cv2 as cv
 
 import numpy as np
 
-'''
-MOTIVACIONAL
-
-Mateus 27:46
-    E, perto da hora nona,
-    exclamou Jesus em alta voz,
-    dizendo: Eli, Eli, lemá sabactâni,
-    isto é, Deus meu, Deus meu,
-    por que me desamparaste?
-
-
-'''
-
 class Tratamento:
     #Estrutura, devolve um array, que vai devolver a natureza da operação https://opencv24-python-tutorials.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_morphological_ops/py_morphological_ops.html
     KERNEL = cv.getStructuringElement(cv.MORPH_CROSS, (3,3)) #CONST
