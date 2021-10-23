@@ -20,37 +20,8 @@ def logar(request):
     bytesDigitalLogin = np.asarray(bytearray(request.FILES.get('imgDigital').read()), dtype=np.uint8)
     digitalLogin = cv2.imdecode(bytesDigitalLogin, 0) #cv2.IMREAD_UNCHANGED
 
-    block_size = 16
-    imagem = digitalLogin
-    imagemNormalizada = normalize(imagem.copy(), float(100), float(100))
-    _, threshold_im = cv2.threshold(imagemNormalizada, 127, 255, cv2.THRESH_OTSU)
-    (segmented_img, normim, mask) = create_segmented_and_variance_images(imagemNormalizada, block_size, 0.4)
-    imagemNormalizada = cv2.blur(imagemNormalizada, (3,3))
-    angles = calculate_angles(imagemNormalizada, W=block_size, smoth=False)
-    orientation_img = visualize_angles(segmented_img, mask, angles, W=block_size)
-    freq = ridge_freq(normim, mask, angles, block_size, kernel_size=9, minWaveLength=10, maxWaveLength=15)
-    gabor_img = gabor_filter(normim, angles, freq)
-    skel_img = skeletonize(gabor_img)
-    minutias,coordenadasMinutias = calculate_minutiaes(skel_img,kernel_size=5) #Retornar coordenadasMinutias
-    orb = cv2.ORB_create()
-    # Compute descriptors
-    _, desLogin = orb.compute(skel_img, coordenadasMinutias) #Retornar desLogin
-    print(coordenadasMinutias)
-    singularities = calculate_singularities(skel_img, angles, 1, block_size, mask)
+    minutiasLogin,descriptorLogin = extraiMinutias(digitalLogin)
 
-    cv2.imshow("teste", imagemNormalizada)
-    cv2.imshow("teste2", threshold_im)
-    cv2.imshow("teste3", segmented_img)
-    cv2.imshow("teste4", normim)
-    cv2.imshow("teste5", orientation_img)
-    cv2.imshow("teste6", freq)
-    cv2.imshow("teste7", gabor_img)
-    cv2.imshow("teste8", skel_img)
-    cv2.imshow("teste9", minutias)
-    cv2.imshow("teste10", singularities)
-
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
 
     try:
         # Conectar ao banco
@@ -88,7 +59,40 @@ def comparaDigitais(digitalLogin,resultados):
         #digitalBanco => digitalBanco já lida pelo openCV
         #digitalLogin => digitalLogin já lida pelo openCV
 
-
-
-
     return None
+
+
+def extraiMinutias(imagem):
+    block_size = 16
+    imagemNormalizada = normalize(imagem.copy(), float(100), float(100))
+    _, threshold_im = cv2.threshold(imagemNormalizada, 127, 255, cv2.THRESH_OTSU)
+    (segmented_img, normim, mask) = create_segmented_and_variance_images(imagemNormalizada, block_size, 0.4)
+    imagemNormalizada = cv2.blur(imagemNormalizada, (3, 3))
+    angles = calculate_angles(imagemNormalizada, W=block_size, smoth=False)
+    orientation_img = visualize_angles(segmented_img, mask, angles, W=block_size)
+    freq = ridge_freq(normim, mask, angles, block_size, kernel_size=9, minWaveLength=10, maxWaveLength=15)
+    gabor_img = gabor_filter(normim, angles, freq)
+    skel_img = skeletonize(gabor_img)
+    rawMinutias,minutias, coordenadasMinutias = calculate_minutiaes(imagem,skel_img, freq,kernel_size=5)  # Retornar coordenadasMinutias
+    orb = cv2.ORB_create()
+    # Compute descriptors
+    _, descriptor = orb.compute(skel_img, coordenadasMinutias)  # Retornar desLogin
+    print(coordenadasMinutias)
+    singularities = calculate_singularities(skel_img, angles, 1, block_size, mask)
+
+    cv2.imshow("teste", imagemNormalizada)
+    cv2.imshow("teste2", threshold_im)
+    cv2.imshow("teste3", segmented_img)
+    cv2.imshow("teste4", normim)
+    cv2.imshow("teste5", orientation_img)
+    cv2.imshow("teste6", freq)
+    cv2.imshow("teste7", gabor_img)
+    cv2.imshow("teste8", skel_img)
+    cv2.imshow("teste9", minutias)
+    cv2.imshow("teste10", singularities)
+    cv2.imshow("teste11", rawMinutias)
+
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+    return coordenadasMinutias,descriptor

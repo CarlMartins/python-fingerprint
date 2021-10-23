@@ -48,13 +48,13 @@ def minutiae_at(pixels, i, j, kernel_size):
     return "none"
 
 
-def calculate_minutiaes(im, kernel_size=3):
-    biniry_image = np.zeros_like(im)
-    biniry_image[im<10] = 1.0
+def calculate_minutiaes(img,imgSkel, freq, kernel_size=3):
+    biniry_image = np.zeros_like(imgSkel)
+    biniry_image[imgSkel < 10] = 1.0
     biniry_image = biniry_image.astype(np.int8)
 
-    (y, x) = im.shape
-    result = cv.cvtColor(im, cv.COLOR_GRAY2RGB)
+    (y, x) = imgSkel.shape
+    result = cv.cvtColor(imgSkel, cv.COLOR_GRAY2RGB)
     colors = {"ending" : (150, 0, 0), "bifurcation" : (0, 150, 0)}
     coordenadasMinutias = []
 
@@ -62,8 +62,17 @@ def calculate_minutiaes(im, kernel_size=3):
     for i in range(1, x - kernel_size//2):
         for j in range(1, y - kernel_size//2):
             minutiae = minutiae_at(biniry_image, j, i, kernel_size)
-            if minutiae != "none":
+            if minutiae != "none" and verificaBorda(freq,j,i) != True:
                 coordenadasMinutias.append(cv2.KeyPoint(j,i,1))
-                cv.circle(result, (i,j), radius=2, color=colors[minutiae], thickness=2)
+                cv.circle(result, (i,j), radius=5, color=colors[minutiae], thickness=1)
+                cv.circle(img, (i,j), radius=5, color=colors[minutiae], thickness=1)
 
-    return result,coordenadasMinutias
+    return img,result,coordenadasMinutias
+
+
+def verificaBorda(freq,j,i):
+    for x in range(j-10,j+10):
+        for y in range(i-10,i+10):
+            if freq[x][y] == 0:
+                return True
+    return False
