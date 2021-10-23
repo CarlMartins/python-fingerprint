@@ -10,6 +10,7 @@ from helloworld.tratamentoImagem.frequencia import ridge_freq
 from helloworld.tratamentoImagem.filtroGabor import gabor_filter
 from helloworld.tratamentoImagem.esqueletizacao import skeletonize
 from helloworld.tratamentoImagem.crossing_number import calculate_minutiaes
+from helloworld.tratamentoImagem.poincare import calculate_singularities
 
 
 
@@ -21,16 +22,21 @@ def logar(request):
 
     block_size = 16
     imagem = digitalLogin
-    imagemNormalizada = normalize(imagem, float(100), float(100))
+    imagemNormalizada = normalize(imagem.copy(), float(100), float(100))
     _, threshold_im = cv2.threshold(imagemNormalizada, 127, 255, cv2.THRESH_OTSU)
-    (segmented_img, normim, mask) = create_segmented_and_variance_images(imagemNormalizada, block_size, 0.3)
-    imagemNormalizada = cv2.GaussianBlur(imagemNormalizada, (9, 9), 0)
+    (segmented_img, normim, mask) = create_segmented_and_variance_images(imagemNormalizada, block_size, 0.4)
+    imagemNormalizada = cv2.blur(imagemNormalizada, (3,3))
     angles = calculate_angles(imagemNormalizada, W=block_size, smoth=False)
     orientation_img = visualize_angles(segmented_img, mask, angles, W=block_size)
-    freq = ridge_freq(normim, mask, angles, block_size, kernel_size=5, minWaveLength=5, maxWaveLength=15)
+    freq = ridge_freq(normim, mask, angles, block_size, kernel_size=9, minWaveLength=10, maxWaveLength=15)
     gabor_img = gabor_filter(normim, angles, freq)
     skel_img = skeletonize(gabor_img)
-    minutias = calculate_minutiaes(skel_img,kernel_size=5)
+    minutias,coordenadasMinutias = calculate_minutiaes(skel_img,kernel_size=5)
+    orb = cv2.ORB_create()
+    # Compute descriptors
+    _, desLogin = orb.compute(skel_img, coordenadasMinutias)
+    print(coordenadasMinutias)
+    singularities = calculate_singularities(skel_img, angles, 1, block_size, mask)
 
     cv2.imshow("teste", imagemNormalizada)
     cv2.imshow("teste2", threshold_im)
@@ -41,6 +47,7 @@ def logar(request):
     cv2.imshow("teste7", gabor_img)
     cv2.imshow("teste8", skel_img)
     cv2.imshow("teste9", minutias)
+    cv2.imshow("teste10", singularities)
 
     cv2.waitKey(0)
     cv2.destroyAllWindows()
