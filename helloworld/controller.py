@@ -31,10 +31,10 @@ def logar(request):
     freq = ridge_freq(normim, mask, angles, block_size, kernel_size=9, minWaveLength=10, maxWaveLength=15)
     gabor_img = gabor_filter(normim, angles, freq)
     skel_img = skeletonize(gabor_img)
-    minutias,coordenadasMinutias = calculate_minutiaes(skel_img,kernel_size=5)
+    minutias,coordenadasMinutias = calculate_minutiaes(skel_img,kernel_size=5) #Retornar coordenadasMinutias
     orb = cv2.ORB_create()
     # Compute descriptors
-    _, desLogin = orb.compute(skel_img, coordenadasMinutias)
+    _, desLogin = orb.compute(skel_img, coordenadasMinutias) #Retornar desLogin
     print(coordenadasMinutias)
     singularities = calculate_singularities(skel_img, angles, 1, block_size, mask)
 
