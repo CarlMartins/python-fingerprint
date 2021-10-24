@@ -3,6 +3,7 @@ import sqlite3
 import cv2
 import numpy as np
 import threading
+import multiprocessing
 
 import helloworld.controller
 from helloworld.tratamentoImagem.extraiMinutias import extraiMinutias
@@ -53,16 +54,17 @@ def comparaDigitais(minutiasLogin,descriptorLogin,resultados):
         # decode the array into an image
         digitalBanco = cv2.imdecode(bytesDigitalBanco, cv2.IMREAD_UNCHANGED)
 
-        thread = threading.Thread(target=helloworld.controller.comparar,args=(minutiasLogin,descriptorLogin,digitalBanco))
-        threads.append(thread)
+        # thread = threading.Thread(target=helloworld.controller.comparar,args=(minutiasLogin,descriptorLogin,digitalBanco))
+
+        t = multiprocessing.Process(target=comparar, args=(minutiasLogin, descriptorLogin, digitalBanco))
+        t.start()
+        threads.append(t)
+
+        # threads.append(helloworld.controller.comparar)
         # comparar(minutiasLogin,descriptorLogin,digitalBanco)
 
     for thread in threads:
-        thread.start()
-
-    for thread in threads:
         thread.join()
-
 
         #digitalBanco => digitalBanco já lida pelo openCV
         #digitalLogin => digitalLogin já lida pelo openCV
@@ -86,6 +88,8 @@ def comparar(minutiasLogin,descriptorLogin,digitalBanco):
     score_threshold = 33
     if score / len(matches) < score_threshold:
         print("Fingerprint matches.")
+        return True
+
     else:
         print("Fingerprint does not match.")
 
