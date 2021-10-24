@@ -53,21 +53,9 @@ def comparaDigitais(digitalLogin,minutiasLogin,descriptorLogin,resultados):
         bytesDigitalBanco = np.frombuffer(imgDigital, dtype='uint8')
 
         # decode the array into an image
-        digitalBanco = cv2.imdecode(bytesDigitalBanco, cv2.IMREAD_UNCHANGED)
+        digitalBanco = cv2.imdecode(bytesDigitalBanco, 0)
 
-        # thread = threading.Thread(target=helloworld.controller.comparar,args=(minutiasLogin,descriptorLogin,digitalBanco))
-        # threads.append(thread)
         comparar(digitalLogin,minutiasLogin,descriptorLogin,digitalBanco)
-
-    # for thread in threads:
-    #     thread.start()
-    #
-    # for thread in threads:
-    #     thread.join()
-
-
-        #digitalBanco => digitalBanco já lida pelo openCV
-        #digitalLogin => digitalLogin já lida pelo openCV
 
     return None
 
@@ -81,16 +69,16 @@ def comparar(digitalLogin,minutiasLogin,descriptorLogin,digitalBanco):
     matches = sorted(bf.match(descriptorLogin, descriptorBanco), key=lambda match: match.distance)
 
     # Plot keypoints
-    # img4 = cv2.drawKeypoints(digitalLogin, minutiasLogin, outImage=None)
-    # img5 = cv2.drawKeypoints(digitalBanco, minutiasBanco, outImage=None)
-    # f, axarr = plt.subplots(1, 2)
-    # axarr[0].imshow(img4)
-    # axarr[1].imshow(img5)
-    # plt.show()
-    # # Plot matches
-    # img3 = cv2.drawMatches(digitalLogin, minutiasLogin, digitalBanco, minutiasBanco, matches, flags=2, outImg=None)
-    # plt.imshow(img3)
-    # plt.show()
+    img4 = cv2.drawKeypoints(digitalLogin, minutiasLogin, outImage=None)
+    img5 = cv2.drawKeypoints(digitalBanco, minutiasBanco, outImage=None)
+    f, axarr = plt.subplots(1, 2)
+    axarr[0].imshow(img4)
+    axarr[1].imshow(img5)
+    plt.show()
+    # Plot matches
+    img3 = cv2.drawMatches(digitalLogin, minutiasLogin, digitalBanco, minutiasBanco, matches, flags=2, outImg=None)
+    plt.imshow(img3)
+    plt.show()
 
 
     # Calculate score

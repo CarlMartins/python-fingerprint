@@ -26,7 +26,7 @@
     <show-object-properties value="true" />
     <loaded-nodes>
       <connection connection-id="4ac4643b-fb75-4638-8e25-ca1a68e4f4ea">
-        <schema name="main" object-types="table, view" />
+        <schema name="main" object-types="table, view, constraint, index, column, dataset trigger" />
       </connection>
     </loaded-nodes>
   </component>
@@ -39,6 +39,9 @@
     Nv_Cadastro integer    
 );
 
+dROP TABLE TB_Cadastro
+
+
 
 
 select * from TB_Cadastro]]></console>
@@ -49,6 +52,9 @@ select * from TB_Cadastro]]></console>
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="4ac4643b-fb75-4638-8e25-ca1a68e4f4ea" />
+  </component>
+  <component name="DBNavigator.Project.DatasetFilterManager">
+    <filter-actions connection-id="4ac4643b-fb75-4638-8e25-ca1a68e4f4ea" dataset="main.TB_Cadastro" active-filter-id="" />
   </component>
   <component name="DBNavigator.Project.EditorStateManager">
     <last-used-providers />
