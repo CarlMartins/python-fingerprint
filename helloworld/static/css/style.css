@@ -80,7 +80,14 @@ p {
 }
 
 .bottom-section {
-  background: rgb(0,0,0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.finger-border {
+background: rgb(0,0,0);
   background: linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(99,99,99,1) 100%);
   width: 450px;
   height: 350px;
@@ -91,14 +98,15 @@ p {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
 .btn {
   position: absolute;
+  right: 0;
+  bottom: 20px;
   height: 50px;
   width: 120px;
-  top: 65%;
-  left: 1170px;
   background-color: rgb(196, 196, 196);
   border-bottom-left-radius: 15px;
   border-top-left-radius: 5px;
