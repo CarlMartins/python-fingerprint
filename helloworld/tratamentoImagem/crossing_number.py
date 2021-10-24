@@ -66,7 +66,7 @@ def calculate_minutiaes(img, imgSkel, freq, limiteLinha, limiteColun, kernel_siz
             minutiae = minutiae_at(biniry_image, j, i, kernel_size)
             if minutiae != "none" and verificaBorda(freq, j, i) != True and limiteLinha[0] + 5 < j < limiteLinha[1] - 5\
                     and (limiteColun[0] + 5 < i < limiteColun[1] - 5):
-                coordenadas_minutias.append(cv2.KeyPoint(j, i, 1))
+                coordenadas_minutias.append(cv2.KeyPoint(i, j, 1))
                 cv.circle(result, (i, j), radius=5, color=colors[minutiae], thickness=1)
                 cv.circle(img, (i, j), radius=6, color=colors[minutiae], thickness=2)
 

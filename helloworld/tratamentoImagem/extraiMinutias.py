@@ -11,7 +11,6 @@ from helloworld.tratamentoImagem.poincare import calculate_singularities
 
 
 def extraiMinutias(imagem):
-    print("testeExtrair")
     block_size = 16
     imagem_normalizada = normalize(imagem.copy(), float(100), float(100))
     _, threshold_im = cv2.threshold(imagem_normalizada, 127, 255, cv2.THRESH_OTSU)
