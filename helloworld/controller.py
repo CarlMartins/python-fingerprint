@@ -2,7 +2,9 @@ from django.views.decorators.csrf import csrf_exempt
 import sqlite3
 import cv2
 import numpy as np
-import asyncio
+import threading
+
+import helloworld.controller
 from helloworld.tratamentoImagem.extraiMinutias import extraiMinutias
 
 
@@ -37,6 +39,8 @@ def logar(request):
 
 
 def comparaDigitais(minutiasLogin,descriptorLogin,resultados):
+
+    threads = []
     for linha in resultados:
         idCadastro = linha[0]
         imgDigital = linha[1]
@@ -49,8 +53,15 @@ def comparaDigitais(minutiasLogin,descriptorLogin,resultados):
         # decode the array into an image
         digitalBanco = cv2.imdecode(bytesDigitalBanco, cv2.IMREAD_UNCHANGED)
 
-        asyncio.run(comparar(minutiasLogin,descriptorLogin,digitalBanco))
+        thread = threading.Thread(target=helloworld.controller.comparar,args=(minutiasLogin,descriptorLogin,digitalBanco))
+        threads.append(thread)
+        # comparar(minutiasLogin,descriptorLogin,digitalBanco)
 
+    for thread in threads:
+        thread.start()
+
+    for thread in threads:
+        thread.join()
 
 
         #digitalBanco => digitalBanco já lida pelo openCV
@@ -59,8 +70,9 @@ def comparaDigitais(minutiasLogin,descriptorLogin,resultados):
     return None
 
 
-async def comparar(minutiasLogin,descriptorLogin,digitalBanco):
+def comparar(minutiasLogin,descriptorLogin,digitalBanco):
 
+    print("teste")
     minutiasBanco, descriptorBanco = extraiMinutias(digitalBanco)
 
     # Matching between descriptors

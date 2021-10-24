@@ -11,6 +11,7 @@ from helloworld.tratamentoImagem.poincare import calculate_singularities
 
 
 def extraiMinutias(imagem):
+    print("testeExtrair")
     block_size = 16
     imagem_normalizada = normalize(imagem.copy(), float(100), float(100))
     _, threshold_im = cv2.threshold(imagem_normalizada, 127, 255, cv2.THRESH_OTSU)
@@ -36,11 +37,11 @@ def extraiMinutias(imagem):
     # cv2.imshow("teste6", freq)
     # cv2.imshow("teste7", gabor_img)
     # cv2.imshow("teste8", skel_img)
-    cv2.imshow("teste9", minutias)
+    # cv2.imshow("teste9", minutias)
     # cv2.imshow("teste10", singularities)
-    cv2.imshow("teste11", raw_minutias)
+    # cv2.imshow("teste11", raw_minutias)
 
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
 
     return coordenadas_minutias, descriptor
