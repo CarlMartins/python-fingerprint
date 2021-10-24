@@ -68,7 +68,7 @@ def calculate_minutiaes(img, imgSkel, freq, limiteLinha, limiteColun, kernel_siz
                     and (limiteColun[0] + 5 < i < limiteColun[1] - 5):
                 coordenadas_minutias.append(cv2.KeyPoint(i, j, 1))
                 cv.circle(result, (i, j), radius=5, color=colors[minutiae], thickness=1)
-                cv.circle(img, (i, j), radius=6, color=colors[minutiae], thickness=2)
+                cv.circle(img, (i, j), radius=6, color=colors[minutiae], thickness=1)
 
     return img, result, coordenadas_minutias
 

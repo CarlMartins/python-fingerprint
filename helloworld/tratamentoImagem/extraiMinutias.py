@@ -43,4 +43,4 @@ def extraiMinutias(imagem):
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()
 
-    return coordenadas_minutias, descriptor
+    return coordenadas_minutias, descriptor,raw_minutias
