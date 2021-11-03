@@ -26,7 +26,7 @@
     <show-object-properties value="true" />
     <loaded-nodes>
       <connection connection-id="4ac4643b-fb75-4638-8e25-ca1a68e4f4ea">
-        <schema name="main" object-types="table, view, constraint, index, column, dataset trigger" />
+        <schema name="main" object-types="table, view, column" />
       </connection>
     </loaded-nodes>
   </component>
@@ -42,6 +42,7 @@
 dROP TABLE TB_Cadastro
 
 
+delete from "TB_Cadastro" where "ID_Cadastro"= 11
 
 
 select * from TB_Cadastro]]></console>

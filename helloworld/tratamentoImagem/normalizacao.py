@@ -1,30 +1,21 @@
 from math import sqrt
 import numpy as np
+import cv2
 
 
-def normalize_pixel(x, v0, v, m, m0):
-    """
-    From Handbook of Fingerprint Recognition pg 133
-    Normalize job used by Hong, Wan and Jain(1998)
-    similar to https://pdfs.semanticscholar.org/6e86/1d0b58bdf7e2e2bb0ecbf274cee6974fe13f.pdf equation 21
-    :param x: pixel value
-    :param v0: desired variance
-    :param v: global image variance
-    :param m: global image mean
-    :param m0: desired mean
-    :return: normilized pixel
-    """
-    dev_coeff = sqrt((v0 * ((x - m)**2)) / v)
-    return m0 + dev_coeff if x > m else m0 - dev_coeff
+def normalizar_pixel(tom_pixel, variancia_alvo, variancia_imagem, tom_medio, tom_medio_alvo):
+    coeficiente_media = sqrt((variancia_alvo * ((tom_pixel - tom_medio) ** 2)) / variancia_imagem)
+    return tom_medio_alvo + coeficiente_media if tom_pixel > tom_medio else tom_medio_alvo - coeficiente_media
 
-def normalize(im, m0, v0):
 
-    m = np.mean(im)
-    v = np.std(im) ** 2
-    (y, x) = im.shape
-    normilize_image = im.copy()
-    for i in range(x):
-        for j in range(y):
-            normilize_image[j, i] = normalize_pixel(im[j, i], v0, v, m, m0)
+def normalizar(imagem, tom_medio_alvo, variacao_alvo):
+    tom_medio = np.mean(imagem)
+    variancia_imagem = np.std(imagem) ** 2
+    (linha, coluna) = imagem.shape
+    imagem_normalizada = imagem.copy()
+    for col in range(coluna):
+        for lin in range(linha):
+            imagem_normalizada[lin, col] = normalizar_pixel(imagem[lin, col], variacao_alvo, variancia_imagem,
+                                                            tom_medio, tom_medio_alvo)
 
-    return normilize_image
+    return imagem_normalizada

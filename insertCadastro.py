@@ -38,7 +38,7 @@ insertBlob("Ministro Cesar Xavier",3,"C:\\Yury\\UNIP\\6º Semestre\\PIVC - Proce
                         "Semestre\\Projeto\\python-fingerprint\\fingerprints\\XAVIER\\1_1.png")
 
 insertBlob("Yury",2,"C:\\Yury\\UNIP\\6º Semestre\\PIVC - Processamento de Imagens e Visão Computacional\\APS 6º "
-                        "Semestre\\Projeto\\python-fingerprint\\fingerprints\\XAVIER\\14_5.png")
+                        "Semestre\\Projeto\\python-fingerprint\\fingerprints\\XAVIER\\9_5.png")#8
 insertBlob("Carlitos",2,"C:\\Yury\\UNIP\\6º Semestre\\PIVC - Processamento de Imagens e Visão Computacional\\APS 6º "
                         "Semestre\\Projeto\\python-fingerprint\\fingerprints\\XAVIER\\2_1.png")
 insertBlob("Alysson",2,"C:\\Yury\\UNIP\\6º Semestre\\PIVC - Processamento de Imagens e Visão Computacional\\APS 6º "
@@ -50,13 +50,12 @@ insertBlob("Augusto",2,"C:\\Yury\\UNIP\\6º Semestre\\PIVC - Processamento de Im
 
 insertBlob("Funcionário 1",1,"C:\\Yury\\UNIP\\6º Semestre\\PIVC - Processamento de Imagens e Visão Computacional\\APS 6º "
                         "Semestre\\Projeto\\python-fingerprint\\fingerprints\\XAVIER\\16_2.png")
+# insertBlob("Funcionário 2",1,"C:\\Yury\\UNIP\\6º Semestre\\PIVC - Processamento de Imagens e Visão Computacional\\APS 6º "
+#                         "Semestre\\Projeto\\python-fingerprint\\fingerprints\\XAVIER\\7_2.png")
 insertBlob("Funcionário 2",1,"C:\\Yury\\UNIP\\6º Semestre\\PIVC - Processamento de Imagens e Visão Computacional\\APS 6º "
-                        "Semestre\\Projeto\\python-fingerprint\\fingerprints\\XAVIER\\12_1.png")
-insertBlob("Funcionário 3",1,"C:\\Yury\\UNIP\\6º Semestre\\PIVC - Processamento de Imagens e Visão Computacional\\APS 6º "
-                        "Semestre\\Projeto\\python-fingerprint\\fingerprints\\XAVIER\\10_2.png")
-insertBlob("Funcionário 4",1,"C:\\Yury\\UNIP\\6º Semestre\\PIVC - Processamento de Imagens e Visão Computacional\\APS 6º "
-                        "Semestre\\Projeto\\python-fingerprint\\fingerprints\\XAVIER\\6_2.png")
-
+                        "Semestre\\Projeto\\python-fingerprint\\fingerprints\\XAVIER\\10_5.png") #10_2
+# insertBlob("Funcionário 4",1,"C:\\Yury\\UNIP\\6º Semestre\\PIVC - Processamento de Imagens e Visão Computacional\\APS 6º "
+#                         "Semestre\\Projeto\\python-fingerprint\\fingerprints\\XAVIER\\6_2.png")
 
 
 
@@ -87,3 +86,29 @@ insertBlob("Funcionário 4",1,"C:\\Yury\\UNIP\\6º Semestre\\PIVC - Processament
 #                         "Semestre\\Projeto\\python-fingerprint\\fingerprints\\109\\109_3.tif")
 # insertBlob("Funcionário 4",1,"C:\\Yury\\UNIP\\6º Semestre\\PIVC - Processamento de Imagens e Visão Computacional\\APS 6º "
 #                         "Semestre\\Projeto\\python-fingerprint\\fingerprints\\110\\110_3.tif")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

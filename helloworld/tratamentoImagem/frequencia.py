@@ -7,7 +7,7 @@ def frequest(im, orientim, kernel_size, minWaveLength, maxWaveLength):
     Based on https://pdfs.semanticscholar.org/ca0d/a7c552877e30e1c5d87dfcfb8b5972b0acd9.pdf pg.14
     Function to estimate the fingerprint ridge frequency within a small block
     of a fingerprint image.
-    An image block the same size as im with all values set to the estimated ridge spatial frequency.  If a
+    An image block the same size as imagem with all values set to the estimated ridge spatial frequency.  If a
     ridge frequency cannot be found, or cannot be found within the limits set by min and max Wavlength freqim is set to zeros.
     """
     rows, cols = np.shape(im)
@@ -50,22 +50,22 @@ def frequest(im, orientim, kernel_size, minWaveLength, maxWaveLength):
     return (freq_block)
 
 
-def ridge_freq(im, mask, orient, block_size, kernel_size, minWaveLength, maxWaveLength):
+def calcular_frequencia(imagem, mask, orient, tamanho_bloco, kernel_size, minWaveLength, maxWaveLength):
     # Function to estimate the fingerprint ridge frequency across a
     # fingerprint image.
-    rows, cols = im.shape
-    freq = np.zeros((rows, cols))
+    linhas, colunas = imagem.shape
+    frequencia = np.zeros((linhas, colunas))
 
-    for row in range(0, rows - block_size, block_size):
-        for col in range(0, cols - block_size, block_size):
-            image_block = im[row:row + block_size][:, col:col + block_size]
-            angle_block = orient[row // block_size][col // block_size]
-            if angle_block:
-                freq[row:row + block_size][:, col:col + block_size] = frequest(image_block, angle_block, kernel_size,
-                                                                               minWaveLength, maxWaveLength)
+    for linha in range(0, linhas - tamanho_bloco, tamanho_bloco):
+        for coluna in range(0, colunas - tamanho_bloco, tamanho_bloco):
+            bloco_imagem = imagem[linha:linha + tamanho_bloco][:, coluna:coluna + tamanho_bloco]
+            angulo_bloco = orient[linha // tamanho_bloco][coluna // tamanho_bloco]
+            if angulo_bloco:
+                frequencia[linha:linha + tamanho_bloco][:, coluna:coluna + tamanho_bloco] = frequest(bloco_imagem, angulo_bloco, kernel_size,
+                                                                                                     minWaveLength, maxWaveLength)
 
-    freq = freq * mask
-    freq_1d = np.reshape(freq, (1, rows * cols))
+    frequencia = frequencia * mask
+    freq_1d = np.reshape(frequencia, (1, linhas * colunas))
     ind = np.where(freq_1d > 0)
     ind = np.array(ind)
     ind = ind[1, :]

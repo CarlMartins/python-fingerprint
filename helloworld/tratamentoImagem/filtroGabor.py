@@ -3,7 +3,7 @@ import scipy
 import cv2
 
 
-def gabor_filter(im, orient, freq, kx=0.65, ky=0.65):
+def filtro_gabor(im, orient, freq, kx=0.65, ky=0.65):
     """
     Gabor filter is a linear filter used for edge detection. Gabor filter can be viewed as a sinusoidal plane of
     particular frequency and orientation, modulated by a Gaussian envelope.

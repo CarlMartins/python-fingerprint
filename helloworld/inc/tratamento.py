@@ -15,7 +15,7 @@ class Tratamento:
 
         #filtro para tirar imperfeições
         img = cv.blur(img,(2,2))
-        #img = cv.GaussianBlur(img,(5,5),0)
+        #imagem = cv.GaussianBlur(imagem,(5,5),0)
 
         return img
 
@@ -71,8 +71,8 @@ class Tratamento:
     def saida(img):
         img = Tratamento.filtros(img)
         img = Tratamento.binariza(img)
-        #img = Tratamento.linhas(img) #isto é um problema
-        #img = Tratamento.limpa(img)
+        #imagem = Tratamento.linhas(imagem) #isto é um problema
+        #imagem = Tratamento.limpa(imagem)
         img = Tratamento.ajustaGama(img, 0.5)
         img = Tratamento.skeletizacao(img)
 

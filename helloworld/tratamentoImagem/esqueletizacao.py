@@ -1,14 +1,14 @@
 import numpy as np
 import cv2 as cv
-#from crossing_number import calculate_minutiaes
+#from crossing_number import identificar_minucias
 from skimage.morphology import skeletonize as skelt
 from skimage.morphology import thin
 
-def skeletonize(image_input):
+def afinar_digital(image_input):
     """
     https://scikit-image.org/docs/dev/auto_examples/edges/plot_skeleton.html
     Skeletonization reduces binary objects to 1 pixel wide representations.
-    skeletonize works by making successive passes of the image. On each pass, border pixels are identified
+    afinar_digital works by making successive passes of the image. On each pass, border pixels are identified
     and removed on the condition that they do not break the connectivity of the corresponding object.
     :param image_input: 2d array uint8
     :return:
@@ -26,7 +26,7 @@ def skeletonize(image_input):
     # def minu_(skeleton, name):
     #     cv.imshow('thin_'+name, output)
     #     cv.bitwise_not(output, output)
-    #     minutias = calculate_minutiaes(output, kernel_size=5); cv.imshow('minu_'+name, minutias)
+    #     minutias = identificar_minucias(output, tamanho_kernel=5); cv.imshow('minu_'+name, minutias)
     # # minu_(output, 'skeleton')
     # # minu_(output, 'thinned')
     # # minu_(output, 'thinned_partial')

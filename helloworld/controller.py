@@ -6,29 +6,29 @@ import multiprocessing
 
 from matplotlib import pyplot as plt
 
-from helloworld.tratamentoImagem.extraiMinutias import extraiMinutias
+from helloworld.tratamentoImagem.extraiMinutias import extrai_minutias
 
 
 @csrf_exempt
 def logar(request):
-    bytesDigitalLogin = np.asarray(bytearray(request.FILES.get('imgDigital').read()), dtype=np.uint8)
-    digitalLogin = cv2.imdecode(bytesDigitalLogin, 0)  # cv2.IMREAD_UNCHANGED
+    print(request.FILES.get('imgDigital').name)
+    bytes_digital_login = np.asarray(bytearray(request.FILES.get('imgDigital').read()), dtype=np.uint8)
+    digital_login = cv2.imdecode(bytes_digital_login, 0)  # cv2.IMREAD_UNCHANGED
 
-    minutiasLogin, descriptorLogin, img_minutias_login = extraiMinutias(digitalLogin)
+    minutias_login, descriptor_login, img_minutias_login = extrai_minutias(digital_login)
 
     try:
         # Conectar ao banco
-        conexaoSQLite = sqlite3.connect('db.sqlite3')
-        cursor = conexaoSQLite.cursor()
+        conexao_sqlite = sqlite3.connect('db.sqlite3')
+        cursor = conexao_sqlite.cursor()
         print("Conectado com o banco SQLite")
 
-        querySelect = "SELECT * from TB_Cadastro"
-        cursor.execute(querySelect)
+        query_select = "SELECT * from TB_Cadastro"
+        cursor.execute(query_select)
         resultados = cursor.fetchall()
 
-        if comparaDigitais(img_minutias_login, descriptorLogin, resultados):
+        if compara_digitais(img_minutias_login, descriptor_login, resultados):
             return None
-
 
     except sqlite3.Error as e:
         print(e)
@@ -36,7 +36,7 @@ def logar(request):
     return None
 
 
-def comparaDigitais(img_minutias_login, descriptorLogin, resultados):
+def compara_digitais(img_minutias_login, descriptor_login, resultados):
     threads = []
     pipes = []
     for linha in resultados:
@@ -45,15 +45,16 @@ def comparaDigitais(img_minutias_login, descriptorLogin, resultados):
         nm_cadastro = linha[2]
         nv_cadastro = linha[3]
 
-        bytesDigitalBanco = np.frombuffer(img_digital, dtype='uint8')
+        bytes_digital_banco = np.frombuffer(img_digital, dtype='uint8')
 
         # decode the array into an image
-        digitalBanco = cv2.imdecode(bytesDigitalBanco, 0)
+        digital_banco = cv2.imdecode(bytes_digital_banco, 0)
 
-        pipe_pai,pipe_filho = multiprocessing.Pipe()
+        pipe_pai, pipe_filho = multiprocessing.Pipe()
         returns = []
 
-        t = multiprocessing.Process(target=comparar, args=(img_minutias_login, descriptorLogin, id_cadastro,digitalBanco,pipe_filho))
+        t = multiprocessing.Process(target=comparar,
+                                    args=(img_minutias_login, descriptor_login, id_cadastro, digital_banco, pipe_filho))
         t.start()
         pipes.append(pipe_pai)
         threads.append(t)
@@ -67,30 +68,30 @@ def comparaDigitais(img_minutias_login, descriptorLogin, resultados):
     return None
 
 
-def comparar(img_minutias_login, descriptor_login,id_cadastro, digital_banco,pipe_filho):
-    minutias_banco, descriptor_banco, img_minutias_banco = extraiMinutias(digital_banco)
+def comparar(img_minutias_login, descriptor_login, id_cadastro, digital_banco, pipe_filho):
+    minutias_banco, descriptor_banco, img_minutias_banco = extrai_minutias(digital_banco)
 
     # Matching between descriptors
     bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
     matches = sorted(bf.match(descriptor_login, descriptor_banco), key=lambda match: match.distance)
 
-    # Plot keypoints
-    _, axarr = plt.subplots(1, 2)
-    axarr[0].imshow(img_minutias_login)
-    axarr[1].imshow(img_minutias_banco)
-    plt.show()
-
     # Calculate score
     score = 0;
     for match in matches:
         score += match.distance
-    score_threshold = 40
-    print(score / len(matches))
-    if score / len(matches) < score_threshold:
-        print("Digital compatível")
-        pipe_filho.send([id_cadastro,True])
+    score_threshold = 50
+    # print(score / len(matches))
+    if score / len(matches) <= score_threshold:
+        print("Digital compatível / ", (score / len(matches)))
+        pipe_filho.send([id_cadastro, True])
         pipe_filho.close()
+
+        # Plot keypoints
+        _, axarr = plt.subplots(1, 2)
+        axarr[0].imshow(img_minutias_login)
+        axarr[1].imshow(img_minutias_banco)
+        plt.show()
     else:
-        print("Digital incompatível.")
-        pipe_filho.send([id_cadastro,False])
+        print("Digital incompatível. / ", (score / len(matches)))
+        pipe_filho.send([id_cadastro, False])
         pipe_filho.close()
