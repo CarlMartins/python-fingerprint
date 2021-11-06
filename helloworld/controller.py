@@ -6,6 +6,8 @@ import cv2
 import numpy as np
 from multiprocessing import Process, Pipe
 
+from django.http import HttpResponse
+
 from matplotlib import pyplot as plt
 
 from helloworld.tratamentoImagem.extraiMinutias import extrai_minutias
@@ -32,10 +34,10 @@ def logar(request):
         user = compara_digitais(img_minutias_login, descriptor_login, resultados)
         if user is not None:
             print(user, ' logou')
-            login(request, user)
-            return render(request, 'index.html')
+            # login(request, user)
+            return HttpResponse("BEM VINDO")
         else:
-            return render(request, 'Não logou')
+            return HttpResponse("NAO LOGOU")
 
     except sqlite3.Error as e:
         print(e)
