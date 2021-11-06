@@ -1,8 +1,10 @@
 from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import render,redirect
+from django.contrib.auth import authenticate, login
 import sqlite3
 import cv2
 import numpy as np
-import multiprocessing
+from multiprocessing import Process,Pipe
 
 from matplotlib import pyplot as plt
 
@@ -28,12 +30,13 @@ def logar(request):
         resultados = cursor.fetchall()
 
         if compara_digitais(img_minutias_login, descriptor_login, resultados):
-            return None
+            login()
+            return render(request,'index.html')
 
     except sqlite3.Error as e:
         print(e)
 
-    return None
+    return render(request,'index.html')
 
 
 def compara_digitais(img_minutias_login, descriptor_login, resultados):
@@ -50,11 +53,11 @@ def compara_digitais(img_minutias_login, descriptor_login, resultados):
         # decode the array into an image
         digital_banco = cv2.imdecode(bytes_digital_banco, 0)
 
-        pipe_pai, pipe_filho = multiprocessing.Pipe()
+        pipe_pai, pipe_filho = Pipe()
         returns = []
 
-        t = multiprocessing.Process(target=comparar,
-                                    args=(img_minutias_login, descriptor_login, id_cadastro, digital_banco, pipe_filho))
+        t = Process(target=comparar,
+                                    args=(img_minutias_login, descriptor_login, id_cadastro,nm_cadastro,nv_cadastro, digital_banco, pipe_filho))
         t.start()
         pipes.append(pipe_pai)
         threads.append(t)
@@ -63,12 +66,15 @@ def compara_digitais(img_minutias_login, descriptor_login, resultados):
         thread.join()
 
     for pipe in pipes:
-        print(pipe.recv()[1])
+        try:
+            print(pipe.recv())
+        except:
+            print("não logou")
 
     return None
 
 
-def comparar(img_minutias_login, descriptor_login, id_cadastro, digital_banco, pipe_filho):
+def comparar(img_minutias_login, descriptor_login, id_cadastro,nm_cadastro,nv_cadastro, digital_banco, pipe_filho):
     minutias_banco, descriptor_banco, img_minutias_banco = extrai_minutias(digital_banco)
 
     # Matching between descriptors
@@ -83,7 +89,7 @@ def comparar(img_minutias_login, descriptor_login, id_cadastro, digital_banco, p
     # print(score / len(matches))
     if score / len(matches) <= score_threshold:
         print("Digital compatível / ", (score / len(matches)))
-        pipe_filho.send([id_cadastro, True])
+        pipe_filho.send([id_cadastro,nm_cadastro,nv_cadastro])
         pipe_filho.close()
 
         # Plot keypoints
@@ -93,5 +99,5 @@ def comparar(img_minutias_login, descriptor_login, id_cadastro, digital_banco, p
         plt.show()
     else:
         print("Digital incompatível. / ", (score / len(matches)))
-        pipe_filho.send([id_cadastro, False])
+        # pipe_filho.send([id_cadastro, False,nm_cadastro,nv_cadastro])
         pipe_filho.close()

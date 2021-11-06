@@ -24,11 +24,7 @@
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
-    <loaded-nodes>
-      <connection connection-id="4ac4643b-fb75-4638-8e25-ca1a68e4f4ea">
-        <schema name="main" object-types="table, view, column" />
-      </connection>
-    </loaded-nodes>
+    <loaded-nodes />
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="4ac4643b-fb75-4638-8e25-ca1a68e4f4ea">
@@ -49,9 +45,7 @@ select * from TB_Cadastro]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files>
-      <object connection-id="4ac4643b-fb75-4638-8e25-ca1a68e4f4ea" object-ref="consoles/SQLite" />
-    </open-files>
+    <open-files />
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="4ac4643b-fb75-4638-8e25-ca1a68e4f4ea" />
