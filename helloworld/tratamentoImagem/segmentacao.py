@@ -21,16 +21,7 @@ def normalizar_img_segmentada(img):
 
 
 def segmentar_imagem(imagem, tamanho_bloco, threshold=.2):
-    """
-    Returns mascara identifying the ROI. Calculates the standard deviation in each image block and threshold the ROI
-    It also normalises the intesity values of
-    the image so that the ridge regions have zero mean, unit standard
-    deviation.
-    :param imagem: Image
-    :param tamanho_bloco: size of the block
-    :param threshold: std threshold
-    :return: imagem_segmentada
-    """
+
     (linha, coluna) = imagem.shape
     threshold = np.std(imagem) * threshold
 

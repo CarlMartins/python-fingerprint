@@ -15,7 +15,7 @@ class Tratamento:
 
         #filtro para tirar imperfeições
         img = cv.blur(img,(2,2))
-        #imagem = cv.GaussianBlur(imagem,(5,5),0)
+        #imagem = cv2.GaussianBlur(imagem,(5,5),0)
 
         return img
 

@@ -1,10 +1,11 @@
+import multiprocessing
+
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
 import sqlite3
 import cv2
 import numpy as np
 from multiprocessing import Process, Pipe
+import time
 
 from django.http import HttpResponse
 
@@ -35,7 +36,7 @@ def logar(request):
         if user is not None:
             print(user, ' logou')
             # login(request, user)
-            return HttpResponse("BEM VINDO")
+            return HttpResponse("BEM VINDO " + user[1] + " seu nivel de acesso é: " + str(user[2]))
         else:
             return HttpResponse("NAO LOGOU")
 
@@ -46,44 +47,42 @@ def logar(request):
 def compara_digitais(img_minutias_login, descriptor_login, resultados):
     threads = []
     pipes = []
-    for linha in resultados:
-        id_cadastro = linha[0]
-        img_digital = linha[1]
-        nm_cadastro = linha[2]
-        nv_cadastro = linha[3]
+    if __name__ == "helloworld.controller":
+        for linha in resultados:
+            pipe_pai, pipe_filho = Pipe()
 
-        bytes_digital_banco = np.frombuffer(img_digital, dtype='uint8')
+            t = Process(target=comparar, args=(img_minutias_login, descriptor_login, linha, pipe_filho))
+            t.start()
+            pipes.append(pipe_pai)
+            threads.append(t)
 
-        # decode the array into an image
-        digital_banco = cv2.imdecode(bytes_digital_banco, 0)
+        for thread in threads:
+            thread.join()
 
-        pipe_pai, pipe_filho = Pipe()
-        returns = []
+        user = None
 
-        t = Process(target=comparar,
-                    args=(img_minutias_login, descriptor_login, id_cadastro, nm_cadastro, nv_cadastro, digital_banco,
-                          pipe_filho))
-        t.start()
-        pipes.append(pipe_pai)
-        threads.append(t)
+        for pipe in pipes:
+            retorno = pipe.recv()
+            if retorno:
+                if user is None:
+                    user = retorno
+                else:
+                    break
 
-    for thread in threads:
-        thread.join()
-
-    user = None
-
-    for pipe in pipes:
-        retorno = pipe.recv()
-        if retorno:
-            if user is None:
-                user = retorno
-            else:
-                break
-
-    return user
+        return user
 
 
-def comparar(img_minutias_login, descriptor_login, id_cadastro, nm_cadastro, nv_cadastro, digital_banco, pipe_filho):
+def comparar(img_minutias_login, descriptor_login, linha, pipe_filho):
+
+    id_cadastro = linha[0]
+    img_digital = linha[1]
+    nm_cadastro = linha[2]
+    nv_cadastro = linha[3]
+
+    bytes_digital_banco = np.frombuffer(img_digital, dtype='uint8')
+
+    # decode the array into an image
+    digital_banco = cv2.imdecode(bytes_digital_banco, 0)
     minutias_banco, descriptor_banco, img_minutias_banco = extrai_minutias(digital_banco)
 
     # Matching between descriptors
@@ -94,7 +93,7 @@ def comparar(img_minutias_login, descriptor_login, id_cadastro, nm_cadastro, nv_
     score = 0;
     for match in matches:
         score += match.distance
-    score_threshold = 50
+    score_threshold = 55
     # print(score / len(matches))
     if score / len(matches) <= score_threshold:
         print("Digital compatível / ", (score / len(matches)))

@@ -3,84 +3,72 @@ import scipy
 import cv2
 
 
-def filtro_gabor(im, orient, freq, kx=0.65, ky=0.65):
-    """
-    Gabor filter is a linear filter used for edge detection. Gabor filter can be viewed as a sinusoidal plane of
-    particular frequency and orientation, modulated by a Gaussian envelope.
-    :param im: asdasdasdas
-    :param orient:
-    :param freq:
-    :param kx:
-    :param ky:
-    :return: imagem com filtro de gabor aplicado,limites das coordenadas
-    """
-    angle_inc = 3
-    im = np.double(im)
-    rows, cols = im.shape
-    return_img = np.zeros((rows, cols))
+def filtro_gabor(imagem, mapa_angulos, mapa_frequencia, kx=0.65, ky=0.65):
+
+    angulo_inclinacao = 3
+    imagem = np.double(imagem)
+    linhas, colunas = imagem.shape
+    imagem_retorno = np.zeros((linhas, colunas))
 
     # Round the array of frequencies to the nearest 0.01 to reduce the
     # number of distinct frequencies we have to deal with.
-    freq_1d = freq.flatten()
-    frequency_ind = np.array(np.where(freq_1d > 0))
-    non_zero_elems_in_freq = freq_1d[frequency_ind]
-    unfreq = np.unique(non_zero_elems_in_freq)
-    non_zero_elems_in_freq = np.double(np.round((non_zero_elems_in_freq * 100))) / 100
-    unfreq = np.unique(freq_1d)
-    unfreq = np.unique(frequency_ind)
-    unfreq = np.unique(non_zero_elems_in_freq)
+    freq_1d = mapa_frequencia.flatten()
+    indice_frequencia = np.array(np.where(freq_1d > 0))
+    elementos_n_nulo_frequencia = freq_1d[indice_frequencia]
+    elementos_n_nulo_frequencia = np.double(np.round((elementos_n_nulo_frequencia * 100))) / 100
+    frequencias_unicas = np.unique(elementos_n_nulo_frequencia)
 
     # Generate filters corresponding to these distinct frequencies and
-    # orientations in 'angle_inc' increments.
-    sigma_x = 1 / unfreq * kx
-    sigma_y = 1 / unfreq * ky
-    block_size = int(np.round(3 * np.max([sigma_x, sigma_y])))
-    array = np.linspace(-block_size, block_size, (2 * block_size + 1))
+    # orientations in 'angulo_inclinacao' increments.
+    sigma_x = 1 / frequencias_unicas * kx
+    sigma_y = 1 / frequencias_unicas * ky
+    tamanho_bloco = int(np.round(3 * np.max([sigma_x, sigma_y])))
+    array = np.linspace(-tamanho_bloco, tamanho_bloco, (2 * tamanho_bloco + 1))
     x, y = np.meshgrid(array, array)
 
     # gabor filter equation
-    reffilter = np.exp(-(((np.power(x, 2)) / (sigma_x * sigma_x) + (np.power(y, 2)) / (sigma_y * sigma_y)))) * \
-                np.cos(2 * np.pi * unfreq[0] * x)
-    filt_rows, filt_cols = reffilter.shape
-    gabor_filter = np.array(np.zeros((180 // angle_inc, filt_rows, filt_cols)))
+    filtro_referencia = np.exp(-(((np.power(x, 2)) / (sigma_x * sigma_x) + (np.power(y, 2)) / (sigma_y * sigma_y)))) * \
+                np.cos(2 * np.pi * frequencias_unicas[0] * x)
+    linhas_filtradas, colunas_filtradas = filtro_referencia.shape
+    filtro_gabor = np.array(np.zeros((180 // angulo_inclinacao, linhas_filtradas, colunas_filtradas)))
 
     # Generate rotated versions of the filter.
-    for degree in range(0, 180 // angle_inc):
-        rot_filt = scipy.ndimage.rotate(reffilter, -(degree * angle_inc + 90), reshape=False)
-        gabor_filter[degree] = rot_filt
+    for angulo in range(0, 180 // angulo_inclinacao):
+        filtro_rotacao = scipy.ndimage.rotate(filtro_referencia, -(angulo * angulo_inclinacao + 90), reshape=False)
+        filtro_gabor[angulo] = filtro_rotacao
 
-    # Convert orientation matrix values from radians to an index value that corresponds to round(degrees/angle_inc)
-    maxorientindex = np.round(180 / angle_inc)
-    orientindex = np.round(orient / np.pi * 180 / angle_inc)
-    for i in range(0, rows // 16):
-        for j in range(0, cols // 16):
-            if orientindex[i][j] < 1:
-                orientindex[i][j] = orientindex[i][j] + maxorientindex
-            if orientindex[i][j] > maxorientindex:
-                orientindex[i][j] = orientindex[i][j] - maxorientindex
+    # Convert orientation matrix values from radians to an index value that corresponds to round(degrees/angulo_inclinacao)
+    indice_max_inclinacao = np.round(180 / angulo_inclinacao)
+    indice_inclinacao = np.round(mapa_angulos / np.pi * 180 / angulo_inclinacao)
+    for lin in range(0, linhas // 16):
+        for col in range(0, colunas // 16):
+            if indice_inclinacao[lin][col] < 1:
+                indice_inclinacao[lin][col] = indice_inclinacao[lin][col] + indice_max_inclinacao
+            if indice_inclinacao[lin][col] > indice_max_inclinacao:
+                indice_inclinacao[lin][col] = indice_inclinacao[lin][col] - indice_max_inclinacao
 
     # Find indices of matrix points greater than maxsze from the image boundary
-    block_size = int(block_size)
-    valid_row, valid_col = np.where(freq > 0)
-    finalind = \
-        np.where((valid_row > block_size) & (valid_row < rows - block_size) & (valid_col > block_size) & (
-                    valid_col < cols - block_size))
+    tamanho_bloco = int(tamanho_bloco)
+    lin_valida, col_valida = np.where(mapa_frequencia > 0)
+    indice_final = \
+        np.where((lin_valida > tamanho_bloco) & (lin_valida < linhas - tamanho_bloco) & (col_valida > tamanho_bloco) & (
+                    col_valida < colunas - tamanho_bloco))
 
     limite_colun = []
 
-    for k in range(0, np.shape(finalind)[1]):
-        r = valid_row[finalind[0][k]];
-        c = valid_col[finalind[0][k]]
-        if block_size < c < (cols - block_size):
+    for k in range(0, np.shape(indice_final)[1]):
+        r = lin_valida[indice_final[0][k]]
+        c = col_valida[indice_final[0][k]]
+        if tamanho_bloco < c < (colunas - tamanho_bloco):
             limite_colun.append(c)
-        img_block = im[r - block_size:r + block_size + 1][:, c - block_size:c + block_size + 1]
-        return_img[r][c] = np.sum(img_block * gabor_filter[int(orientindex[r // 16][c // 16]) - 1])
+        img_block = imagem[r - tamanho_bloco:r + tamanho_bloco + 1][:, c - tamanho_bloco:c + tamanho_bloco + 1]
+        imagem_retorno[r][c] = np.sum(img_block * filtro_gabor[int(indice_inclinacao[r // 16][c // 16]) - 1])
 
-    linha_ini, linha_fin = valid_row[finalind[0][0]], valid_row[finalind[0][np.shape(finalind)[1] - 1]]
+    linha_ini, linha_fin = lin_valida[indice_final[0][0]], lin_valida[indice_final[0][np.shape(indice_final)[1] - 1]]
 
     limite_linha = [linha_ini, linha_fin]
     limite_colun = [min(limite_colun), max(limite_colun)]
 
-    gabor_img = 255 - np.array((return_img < 0) * 255).astype(np.uint8)
+    imagem_gabor = 255 - np.array((imagem_retorno < 0) * 255).astype(np.uint8)
 
-    return gabor_img, limite_linha, limite_colun
+    return imagem_gabor, limite_linha, limite_colun

@@ -47,7 +47,7 @@ def calcular_singularidades(im, angles, tolerance, W, mask):
 
     for i in range(3, len(angles) - 2):             # Y
         for j in range(3, len(angles[i]) - 2):      # tom_pixel
-            # mask any singularity outside of the mask
+            # mascara any singularity outside of the mascara
             mask_slice = mask[(i-2)*W:(i+3)*W, (j-2)*W:(j+3)*W]
             mask_flag = np.sum(mask_slice)
             if mask_flag == (W*5)**2:

@@ -1,6 +1,5 @@
 from math import sqrt
 import numpy as np
-import cv2
 
 
 def normalizar_pixel(tom_pixel, variancia_alvo, variancia_imagem, tom_medio, tom_medio_alvo):

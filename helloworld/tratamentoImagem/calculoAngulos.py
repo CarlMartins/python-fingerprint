@@ -1,6 +1,6 @@
 import math
 import numpy as np
-import cv2 as cv
+import cv2
 
 
 def calcular_angulos(imagem, tamanho_bloco):
@@ -17,42 +17,36 @@ def calcular_angulos(imagem, tamanho_bloco):
 
     (y, x) = imagem.shape
 
-    sobel_operator = [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]]
-    y_sobel = np.array(sobel_operator).astype(np.int)
-    x_sobel = np.transpose(y_sobel).astype(np.int)
+    matriz_sobel = [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]]
+    sobel_y = np.array(matriz_sobel).astype(np.int)
+    sobel_x = np.transpose(sobel_y).astype(np.int)
 
-    result = [[] for i in range(1, y, tamanho_bloco)]
+    retorno = [[] for i in range(1, y, tamanho_bloco)]
 
-    gx_ = cv.filter2D(imagem / 125, -1, y_sobel) * 125
-    gy_ = cv.filter2D(imagem / 125, -1, x_sobel) * 125
+    gx_ = cv2.filter2D(imagem / 125, -1, sobel_y) * 125
+    gy_ = cv2.filter2D(imagem / 125, -1, sobel_x) * 125
 
     for j in range(1, y, tamanho_bloco):
         for i in range(1, x, tamanho_bloco):
-            nominator = 0
-            denominator = 0
+            nominador = 0
+            denominador = 0
             for l in range(j, min(j + tamanho_bloco, y - 1)):
                 for k in range(i, min(i + tamanho_bloco, x - 1)):
-                    Gx = round(gx_[l, k])  # horizontal gradients at l, k
-                    Gy = round(gy_[l, k])  # vertial gradients at l, k
-                    nominator += j1(Gx, Gy)
-                    denominator += j2(Gx, Gy)
+                    gx = round(gx_[l, k])  # horizontal gradients at l, k
+                    gy = round(gy_[l, k])  # vertial gradients at l, k
+                    nominador += j1(gx, gy)
+                    denominador += j2(gx, gy)
 
-            # nominator = round(np.sum(gy_[j:min(j + tamanho_bloco, y - 1), i:min(i + tamanho_bloco , tom_pixel - 1)]))
-            # denominator = round(np.sum(gx_[j:min(j + tamanho_bloco, y - 1), i:min(i + tamanho_bloco , tom_pixel - 1)]))
-            if nominator or denominator:
-                angle = (math.pi + math.atan2(nominator, denominator)) / 2
-                orientation = np.pi / 2 + math.atan2(nominator, denominator) / 2
-                result[int((j - 1) // tamanho_bloco)].append(angle)
+            if nominador or denominador:
+                angulo = (math.pi + math.atan2(nominador, denominador)) / 2
+                orientation = np.pi / 2 + math.atan2(nominador, denominador) / 2
+                retorno[int((j - 1) // tamanho_bloco)].append(angulo)
             else:
-                result[int((j - 1) // tamanho_bloco)].append(0)
+                retorno[int((j - 1) // tamanho_bloco)].append(0)
 
-            # segment image
-            # focus_img = imagem[j:min(j + tamanho_bloco, y - 1), i:min(i + tamanho_bloco , tom_pixel - 1)]
-            # segmentator = -1 if segmentator/tamanho_bloco*tamanho_bloco < np.max(focus_img)*
+    retorno = np.array(retorno)
 
-    result = np.array(result)
-
-    return result
+    return retorno
 
 
 def gauss(x, y):
@@ -60,7 +54,7 @@ def gauss(x, y):
     return (1 / (2 * math.pi * ssigma)) * math.exp(-(x * x + y * y) / (2 * ssigma))
 
 
-def kernel_from_function(size, f):
+def obter_kernel(size, f):
     kernel = [[] for i in range(0, size)]
     for i in range(0, size):
         for j in range(0, size):
@@ -68,31 +62,7 @@ def kernel_from_function(size, f):
     return kernel
 
 
-def smooth_angles(angles):
-    """
-    reference: https://airccj.org/CSCP/vol7/csit76809.pdf pg91
-    Practically, it is possible to have a block so noisy that the directional estimate is completely false.
-    This then causes a very large angular variation between two adjacent blocks. However, a
-    fingerprint has some directional continuity, such a variation between two adjacent blocks is then
-    representative of a bad estimate. To eliminate such discontinuities, a low-pass filter is applied to
-    the directional board.
-    :param angles:
-    :return:
-    """
-    angles = np.array(angles)
-    cos_angles = np.cos(angles.copy() * 2)
-    sin_angles = np.sin(angles.copy() * 2)
-
-    kernel = np.array(kernel_from_function(5, gauss))
-
-    cos_angles = cv.filter2D(cos_angles / 125, -1, kernel) * 125
-    sin_angles = cv.filter2D(sin_angles / 125, -1, kernel) * 125
-    smooth_angles = np.arctan2(sin_angles, cos_angles) / 2
-
-    return smooth_angles
-
-
-def get_line_ends(i, j, W, tang):
+def encontrar_limites_linhas(i, j, W, tang):
     if -1 <= tang and tang <= 1:
         begin = (i, int((-W / 2) * tang + j + W / 2))
         end = (i + W, int((W / 2) * tang + j + W / 2))
@@ -104,15 +74,15 @@ def get_line_ends(i, j, W, tang):
 
 def gerar_imagem_angulos(im, mask, angles, W):
     (y, x) = im.shape
-    result = cv.cvtColor(np.zeros(im.shape, np.uint8), cv.COLOR_GRAY2RGB)
+    result = cv2.cvtColor(np.zeros(im.shape, np.uint8), cv2.COLOR_GRAY2RGB)
     mask_threshold = (W - 1) ** 2
     for i in range(1, x, W):
         for j in range(1, y, W):
             radian = np.sum(mask[j - 1:j + W, i - 1:i + W])
             if radian > mask_threshold:
                 tang = math.tan(angles[(j - 1) // W][(i - 1) // W])
-                (begin, end) = get_line_ends(i, j, W, tang)
-                cv.line(result, begin, end, color=150)
+                (begin, end) = encontrar_limites_linhas(i, j, W, tang)
+                cv2.line(result, begin, end, color=[0, 150, 0])
 
-    cv.resize(result, im.shape, result)
+    cv2.resize(result, im.shape, result)
     return result

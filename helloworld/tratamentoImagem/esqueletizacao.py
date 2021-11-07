@@ -24,13 +24,13 @@ def afinar_digital(image_input):
     # thinned_partial = thin(image, max_iter=25)
     #
     # def minu_(skeleton, name):
-    #     cv.imshow('thin_'+name, output)
-    #     cv.bitwise_not(output, output)
-    #     minutias = identificar_minucias(output, tamanho_kernel=5); cv.imshow('minu_'+name, minutias)
+    #     cv2.imshow('thin_'+name, output)
+    #     cv2.bitwise_not(output, output)
+    #     minutias = identificar_minucias(output, tamanho_kernel=5); cv2.imshow('minu_'+name, minutias)
     # # minu_(output, 'skeleton')
     # # minu_(output, 'thinned')
     # # minu_(output, 'thinned_partial')
-    # # cv.waitKeyEx()
+    # # cv2.waitKeyEx()
 
     output[skeleton] = 255
     cv.bitwise_not(output, output)
@@ -75,7 +75,7 @@ def thinning_morph(image, kernel):
     left_mask[:, 0:-2] = left_mask[:, 1:-1]
     cv.imshow('left', left_mask)
 
-    # combine left and down mask
+    # combine left and down mascara
     cv.bitwise_or(down_mask, down_mask, thining_image)
     output = np.zeros_like(thining_image)
     output[thining_image < 250] = 255

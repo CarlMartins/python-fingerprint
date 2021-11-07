@@ -14,7 +14,7 @@ def extrai_minutias(imagem):
 
     tamanho_bloco = 16
 
-    imagem_normalizada = normalizar(imagem.copy(), float(150), float(150))
+    imagem_normalizada = normalizar(imagem.copy(), float(100), float(100))
 
     (imagem_segmentada, img_seg_normalizada, mascara) = segmentar_imagem(imagem_normalizada, tamanho_bloco, 0.4)
 
@@ -23,7 +23,7 @@ def extrai_minutias(imagem):
     mapa_angulos = calcular_angulos(imagem_normalizada, tamanho_bloco)
 
     mapa_frequencia = calcular_frequencia(img_seg_normalizada, mascara, mapa_angulos, tamanho_bloco,
-                                          tamanho_bloco, minWaveLength=10, maxWaveLength=15)
+                                          tamanho_bloco, comprimento_min_onda=10, comprimento_max_onda=15)
 
     imagem_gabor, limite_linha, limite_coluna = filtro_gabor(img_seg_normalizada, mapa_angulos, mapa_frequencia)
 
@@ -37,12 +37,12 @@ def extrai_minutias(imagem):
     # Compute descriptors
     _, descriptor = orb.compute(imagem_digital_afinada, coordenadas_minucias)  # Retornar desLogin
     
-    # singularidades = calcular_singularidades(imagem_digital_afinada, mapa_angulos, 1, tamanho_bloco, mascara)
-    # imagem_mapa_angulos = gerar_imagem_angulos(imagem_segmentada, mascara, mapa_angulos, tamanho_bloco=tamanho_bloco)
+    singularidades = calcular_singularidades(imagem_digital_afinada, mapa_angulos, 1, tamanho_bloco, mascara)
+    imagem_mapa_angulos = gerar_imagem_angulos(imagem_segmentada, mascara, mapa_angulos, tamanho_bloco)
     # _, threshold_im = cv2.threshold(imagem_normalizada, 127, 255, cv2.THRESH_OTSU)
     
     # cv2.imshow("teste", imagem_normalizada)
-    # cv2.imshow("teste2", threshold_im)
+    # # cv2.imshow("teste2", threshold_im)
     # cv2.imshow("teste3", imagem_segmentada)
     # cv2.imshow("teste4", img_seg_normalizada)
     # cv2.imshow("teste5", imagem_mapa_angulos)
