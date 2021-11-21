@@ -10,21 +10,38 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
-  background: rgb(242,242,242);
-  background: linear-gradient(135deg, rgba(242,242,242,1) 60%, rgba(102,102,102,1) 100%);
+  flex-direction: row;
+  background: rgb(242, 242, 242);
+  background: linear-gradient(
+    135deg,
+    rgba(242, 242, 242, 1) 60%,
+    rgba(102, 102, 102, 1) 100%
+  );
+}
+
+.inner-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  transition: box-shadow 0.5s;
+}
+
+.inner-container:hover .finger-output,
+.inner-container:hover .reader-body {
+  box-shadow: 50px 75px 50px rgb(112, 112, 112);
 }
 
 .reader-body {
   height: 450px;
-  background: rgb(228,228,228);
-  background: radial-gradient(circle, rgba(228,228,228,1) 0%, rgba(214,214,214,1) 100%);
+  background: rgb(228, 228, 228);
+  background: radial-gradient(
+    circle,
+    rgba(228, 228, 228, 1) 0%,
+    rgba(214, 214, 214, 1) 100%
+  );
   border-radius: 10px;
-  transition: box-shadow .5s;
-}
-
-.reader-body:hover {
-  box-shadow: 50px 75px 35px rgb(59, 59, 59);
+  transition: box-shadow 0.5s;
 }
 
 .upper-section {
@@ -38,23 +55,23 @@
 
 p {
   font-size: 35px;
-  font-family: 'Noto Sans Mono', monospace;
+  font-family: "Noto Sans Mono", monospace;
   color: rgb(92, 92, 92);
 }
 
 .finger-container {
   display: flex;
   font-size: 25px;
-  cursor: url('../images/fingerprint-cursor.png'), auto;
-  background-image: url('../images/fingerprint1.png');
-  transition: background-image .5s;
+  cursor: url("../images/fingerprint-cursor.png"), auto;
+  background-image: url("../images/fingerprint1.png");
+  transition: background-image 0.5s;
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   background-color: rgb(196, 196, 196);
   border-radius: 50%;
   justify-content: center;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   width: 180px;
   height: 225px;
@@ -62,14 +79,18 @@ p {
 }
 
 .finger-container:hover {
-  background-image: url('../images/fingerprint2.png');
+  background-image: url("../images/fingerprint2.png");
 }
 
 .out-border {
   display: flex;
   font-size: 25px;
-  background: rgb(0,0,0);
-  background: radial-gradient(circle, rgba(0,0,0,1) 0%, rgba(99,99,99,1) 100%);
+  background: rgb(0, 0, 0);
+  background: radial-gradient(
+    circle,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(99, 99, 99, 1) 100%
+  );
   border-radius: 50%;
   justify-content: center;
   align-items: center;
@@ -87,8 +108,12 @@ p {
 }
 
 .finger-border {
-background: rgb(0,0,0);
-  background: linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(99,99,99,1) 100%);
+  background: rgb(0, 0, 0);
+  background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(99, 99, 99, 1) 100%
+  );
   width: 450px;
   height: 350px;
   border-top-left-radius: 15px;
@@ -111,7 +136,31 @@ background: rgb(0,0,0);
   border-bottom-left-radius: 15px;
   border-top-left-radius: 5px;
   border: 0;
-  font-family: 'Noto Sans Mono', monospace;
+  font-family: "Noto Sans Mono", monospace;
   color: rgb(92, 92, 92);
   font-size: 15px;
+}
+
+.finger-output {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 210px;
+  width: 160px;
+  margin-top: 17.2vh;
+  border-top-right-radius: 5%;
+  border-bottom-right-radius: 5%;
+  background: rgb(0, 0, 0);
+  background: linear-gradient(
+    10deg,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(99, 99, 99, 1) 100%
+  );
+  transition: box-shadow 0.5s;
+}
+
+.finger-output-img {
+  border: none;
+  background-color: white;
+  font-size: 25px;
 }
