@@ -28,9 +28,9 @@ def verifica_minutia(pixels, i, j, tamanho_kernel):
         # if pixel on boundary are crossed with the ridge once, then it is a possible ridge ending
         # if pixel on boundary are crossed with the ridge three times, then it is a ridge bifurcation
         if pixels_pretos == 1:
-            return "ending"
+            return "ponta"
         if pixels_pretos == 3:
-            return "bifurcation"
+            return "bifurcacao"
 
     return "none"
 
