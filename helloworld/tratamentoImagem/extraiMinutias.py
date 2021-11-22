@@ -6,7 +6,7 @@ from helloworld.tratamentoImagem.calculoAngulos import *
 from helloworld.tratamentoImagem.frequencia import calcular_frequencia
 from helloworld.tratamentoImagem.filtroGabor import filtro_gabor
 from helloworld.tratamentoImagem.esqueletizacao import afinar_digital
-from helloworld.tratamentoImagem.crossing_number import identificar_minucias
+from helloworld.tratamentoImagem.calculo_minucias import identificar_minucias
 from helloworld.tratamentoImagem.poincare import calcular_singularidades
 
 
@@ -14,7 +14,7 @@ def extrai_minutias(imagem):
 
     tamanho_bloco = 16
 
-    imagem_normalizada = normalizar(imagem.copy(), float(100), float(100))
+    imagem_normalizada = normalizar(imagem.copy(), float(150), float(150))
 
     (imagem_segmentada, img_seg_normalizada, mascara) = segmentar_imagem(imagem_normalizada, tamanho_bloco, 0.4)
 
